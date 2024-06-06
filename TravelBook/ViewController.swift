@@ -18,6 +18,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var locationManager = CLLocationManager()
     var chosenLatitude = Double()
     var chosenLongitude = Double()
+
     
     
     override func viewDidLoad() {
