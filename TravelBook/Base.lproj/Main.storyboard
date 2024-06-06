@@ -94,6 +94,7 @@
                         <outlet property="commentText" destination="e50-go-ZQa" id="QAH-t3-Ipq"/>
                         <outlet property="mapView" destination="Ky3-OI-sU4" id="RkU-fA-okm"/>
                         <outlet property="nameText" destination="okf-hX-Yre" id="DVn-H8-oFE"/>
+                        <outlet property="saveButton" destination="pW8-Zc-eb6" id="Ztn-nx-Z9K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -15,6 +15,10 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     var titleArray = [String]()
     var idArray = [UUID]()
     
+    var selectedPlace = ""
+    var selectedPlaceId : UUID?
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +78,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     
     @objc func addButtonClicked(){
+            selectedPlace = ""
             performSegue(withIdentifier: "toViewController", sender: nil)
         }
     
@@ -86,6 +91,21 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = UITableViewCell()
         cell.textLabel?.text = titleArray[indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedPlace = titleArray[indexPath.row]
+        selectedPlaceId = idArray[indexPath.row]
+        performSegue(withIdentifier: "toViewController", sender: nil)
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toViewController" {
+            let destinationVC = segue.destination as? ViewController
+            destinationVC?.chosenPlace = selectedPlace
+            destinationVC?.chosenPlaceId = selectedPlaceId //secilen placein hem ismini hem id sini diger tarafa aktarmis oluyoruz
+        }
     }
     
 

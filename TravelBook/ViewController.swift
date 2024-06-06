@@ -14,10 +14,19 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var commentText: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
     
     var locationManager = CLLocationManager()
     var chosenLatitude = Double()
     var chosenLongitude = Double()
+    var chosenPlace = ""
+    var chosenPlaceId : UUID?
+    
+    var annotationTitle = ""
+    var annotationSubtitle = ""
+    var annotationLatitude = Double()
+    var annotationLongitude = Double()
+    
 
     
     
@@ -35,6 +44,71 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         gestureRecognizer.minimumPressDuration = 2
         mapView.addGestureRecognizer(gestureRecognizer)
+        
+        if chosenPlace != "" {
+            
+            //CoreData
+            
+            saveButton.isHidden = true
+            
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let context = appDelegate.persistentContainer.viewContext
+
+            
+            //fetch
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Places")
+            let idString = chosenPlaceId!.uuidString
+            request.returnsObjectsAsFaults = false
+            request.predicate = NSPredicate(format: "id = %@", idString) //adding filter
+            
+            
+            do {
+               let results = try context.fetch(request)
+                
+                if results.count > 0 { //eger gercekten bunun icinde bir sey varsa
+                    
+                    for result in results as! [NSManagedObject] {
+                        
+                        if let title = result.value(forKey: "title") as? String {
+                            annotationTitle = title
+                            
+                            if let comment = result.value(forKey: "subtitle") as? String {
+                                annotationSubtitle = comment
+                                
+                                if let latitude = result.value(forKey: "latitude") as? Double {
+                                    annotationLatitude = latitude
+                                    
+                                    if let longitude = result.value(forKey: "longitude") as? Double {
+                                        annotationLongitude = longitude
+                                        
+                                        let annotation = MKPointAnnotation()
+                                        annotation.title = annotationTitle
+                                        annotation.subtitle = annotationSubtitle
+                                        let coordinate = CLLocationCoordinate2D(latitude: annotationLatitude, longitude: annotationLongitude)
+                                        annotation.coordinate = coordinate
+                                        mapView.addAnnotation(annotation)
+                                        nameText.text = annotationTitle
+                                        commentText.text = annotationSubtitle
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch{
+                print("error")
+            }
+            
+            
+        } else {
+            saveButton.isHidden = false
+            saveButton.isEnabled = false
+            nameText.text = ""
+            commentText.text = ""
+        }
+        
 
     }
     
