@@ -154,10 +154,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         if annotation is MKUserLocation { //kullanicinin yerinin pin ile gostermek istemiyoruz
             return nil
         }
-        
-        
-        
-        
+    
         
         let reuseId = "myAnnotation"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
@@ -168,7 +165,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             pinView?.tintColor = UIColor.black // annotationlar normalde kirmizi ya, bununla renk degistirebiliyoruz
             
             let button = UIButton(type: UIButton.ButtonType.detailDisclosure) // detay gosterecegim bir buton
-            pinView?.rightCalloutAccessoryView //sag tarafta gosterilecek gorunumde bu button u goster
+            pinView?.rightCalloutAccessoryView = button //sag tarafta gosterilecek gorunumde bu button u goster
             
         } else {
             pinView?.annotation = annotation
