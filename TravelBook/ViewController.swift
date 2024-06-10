@@ -172,9 +172,36 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         return pinView
-        
-        
-        
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if chosenPlace != ""{ // bir secilmis latitude ve longitude um var demektir.
+            
+            
+            var requestLocation = CLLocation(latitude: annotationLatitude, longitude: annotationLongitude)
+            
+            CLGeocoder().reverseGeocodeLocation(requestLocation) { (placemarks, error) in
+                //closure
+                
+                if let placemark = placemarks {
+                    if placemark.count > 0 {
+                        
+                        let newPlacemark =  MKPlacemark(placemark: placemark[0])
+                        let item = MKMapItem(placemark: newPlacemark) //navigasyonu acabilmek icin mapitem olusturmak gerekiyor. onun icin de placemark denilen obje gerekiyor. bu objeyi de reverseGeocodeLocation ile aliyoruz
+                        
+                        item.name = self.annotationTitle
+                        
+                        let launchOption = [MKLaunchOptionsDirectionsModeKey:MKLaunchOptionsDirectionsModeDriving]  //hangi aracla gostereyim
+                        
+                        item.openInMaps(launchOptions: launchOption)
+                        
+                    }
+                }
+                
+                
+                
+            } //CLGeocoder koordinatlar ve yerler arasinda baglanti kurmamiza yarayan sinif
+        }
     }
     
     
