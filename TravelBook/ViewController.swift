@@ -112,7 +112,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
         } else {
             saveButton.isHidden = false
-            saveButton.isEnabled = false
+            saveButton.isEnabled = true
             nameText.text = ""
             commentText.text = ""
         }
@@ -149,6 +149,38 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
+        
+        if annotation is MKUserLocation { //kullanicinin yerinin pin ile gostermek istemiyoruz
+            return nil
+        }
+        
+        
+        
+        
+        
+        let reuseId = "myAnnotation"
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView?.canShowCallout = true // bir baloncukla birlikte extra bilgi gosterebildigimiz yer
+            pinView?.tintColor = UIColor.black // annotationlar normalde kirmizi ya, bununla renk degistirebiliyoruz
+            
+            let button = UIButton(type: UIButton.ButtonType.detailDisclosure) // detay gosterecegim bir buton
+            pinView?.rightCalloutAccessoryView //sag tarafta gosterilecek gorunumde bu button u goster
+            
+        } else {
+            pinView?.annotation = annotation
+        }
+        
+        return pinView
+        
+        
+        
+    }
+    
+    
     
     @IBAction func saveButtonClicked(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -173,6 +205,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             print("error")
         }
         
+        NotificationCenter.default.post(name: NSNotification.Name("newPlace"), object: nil)
+        navigationController?.popViewController(animated: true) //bir onceki ViewController a goturur
         
         
     }

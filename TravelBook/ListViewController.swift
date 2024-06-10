@@ -37,8 +37,12 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(getData), name: NSNotification.Name("newPlace"), object: nil)
+    }
     
-    func getData() {
+    
+    @objc func getData() {
         
         
         self.titleArray.removeAll(keepingCapacity: false) // to prevent duplication
@@ -107,6 +111,8 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             destinationVC?.chosenPlaceId = selectedPlaceId //secilen placein hem ismini hem id sini diger tarafa aktarmis oluyoruz
         }
     }
+    
+
     
 
 
